@@ -1,4 +1,5 @@
 class GenericLinkedList <T> {
+    @SuppressWarnings("hiding")
     class Node <T> {
         T data;
         Node<T> next, prev;

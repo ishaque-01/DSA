@@ -1,5 +1,3 @@
-import java.util.Stack;
-
 class Node {
     int data;
     Node next;
