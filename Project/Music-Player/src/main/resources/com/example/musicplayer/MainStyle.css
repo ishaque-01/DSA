@@ -1,0 +1,11 @@
+Button {
+    -fx-text-fill: white;
+    -fx-background-color: #2e222c;
+    -fx-font-size: 17px;
+    -fx-font-family: "Noto Sans Mono ExtraBold";
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+    -fx-border-style: none;
+    -fx-background-radius: 100px;
+    -fx-effect: dropshadow( gaussian , rgb(86, 64, 79), 10 , 0.5 , 0 , 5 );
+}
