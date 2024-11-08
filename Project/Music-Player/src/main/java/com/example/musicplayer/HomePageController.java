@@ -24,16 +24,23 @@ public class HomePageController implements Initializable {
     private ImageView logoImg;
     private Button audioBtn, videoBtn, exitBtn;
     private Stage stage;
-    private Scene scene;
-    private Parent root;
 
     public void audio(ActionEvent e) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
-        stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+//        root = FXMLLoader.load(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
+//        stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
+//        scene = new Scene(root);
+//        scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
+//        stage.setScene(scene);
+//        stage.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
+        Parent root = loader.load();
+        AudioFilesController afc = loader.getController();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
+
     }
 
     public void video(ActionEvent e) {

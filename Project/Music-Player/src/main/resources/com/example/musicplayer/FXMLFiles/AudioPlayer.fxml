@@ -5,18 +5,34 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="401.0" prefWidth="469.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioPlayerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioPlayerController">
    <children>
-      <Slider fx:id="volume" layoutX="345.0" layoutY="319.0" prefHeight="35.0" prefWidth="119.0" value="50.0" />
-      <Label alignment="CENTER" layoutX="51.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="Previous" />
-      <Label fx:id="playLabel" alignment="CENTER" layoutX="113.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="PAUSE" />
-      <Label alignment="CENTER" layoutX="173.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="Next" />
-      <ImageView fx:id="logo" fitHeight="266.0" fitWidth="324.0" layoutX="93.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="47.0" fitWidth="46.0" layoutX="9.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../back.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="goBack" layoutX="12.0" layoutY="13.0" mnemonicParsing="false" onAction="#goingBack" opacity="0.0" style="-fx-min-width: 40; -fx-min-height: 40; -fx-max-width: 40; -fx-max-height: 40; -fx-border-radius: 50; -fx-background-radius: 50;" />
+      <Slider fx:id="volume" layoutX="337.0" layoutY="319.0" prefHeight="35.0" prefWidth="119.0" value="50.0" />
+      <Label alignment="CENTER" layoutX="51.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="Previous">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
+         </font></Label>
+      <Label fx:id="playLabel" alignment="CENTER" layoutX="113.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="PAUSE">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
+         </font></Label>
+      <Label alignment="CENTER" layoutX="173.0" layoutY="366.0" prefHeight="18.0" prefWidth="54.0" text="Next">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
+         </font></Label>
+      <ImageView fx:id="logo" fitHeight="266.0" fitWidth="324.0" layoutX="173.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../logo.png" />
          </image>
@@ -51,7 +67,27 @@
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
          </font>
       </Button>
-      <ProgressBar fx:id="progressBar" layoutX="6.0" layoutY="294.0" prefHeight="12.0" prefWidth="456.0" progress="0.0" />
-      <ComboBox fx:id="speedBox" layoutX="240.0" layoutY="324.0" onAction="#changeSpeed" prefHeight="26.0" prefWidth="87.0" promptText="SPEED" />
+      <ProgressBar fx:id="progressBar" layoutX="8.0" layoutY="294.0" prefHeight="12.0" prefWidth="586.0" progress="0.0" />
+      <ComboBox fx:id="speedBox" layoutX="240.0" layoutY="324.0" onAction="#changeSpeed" prefHeight="26.0" prefWidth="87.0" promptText="SPEED" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" />
+      <Label fx:id="fileName" alignment="CENTER" layoutX="120.0" layoutY="14.0" prefHeight="40.0" prefWidth="362.0" text="NAME">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="13.0" />
+         </font>
+      </Label>
+      <ToggleButton fx:id="showQueue" layoutX="464.0" layoutY="323.0" mnemonicParsing="false" onAction="#playingQueue" prefHeight="26.0" prefWidth="130.0" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" text="Playing Queue" textAlignment="CENTER">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="13.0" />
+         </font>
+      </ToggleButton>
+      <Label fx:id="runningTime" alignment="CENTER" layoutX="9.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0" text="Label">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="endTime" alignment="CENTER" layoutX="548.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0" text="Label">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="13.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -39,6 +39,12 @@ public class AudioFilesController implements Initializable {
     private Scene scene;
     private Parent root;
 
+    public AudioFilesController(LinkedList<File> list) {
+        this.list = list;
+    }
+
+    public AudioFilesController() {}
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -119,4 +125,8 @@ public class AudioFilesController implements Initializable {
         filesList.setText(listNames.toString());
     }
 
+    public void updateTextArea(LinkedList<File> list) {
+        this.list = list;
+        printOnTextArea(filesList);
+    }
 }

@@ -7,12 +7,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -25,22 +30,23 @@ import java.util.TimerTask;
 import java.util.Collections;
 
 public class AudioPlayerController implements Initializable {
-//Next Icon --->>> https://www.freepik.com/icon/next_6497576#fromView=search&page=2&position=8&uuid=c4e79157-cb64-422a-acf8-81fba8d178f7
-//Prev Icon --->>>
 
     @FXML
     private ImageView logo, playPause;
     @FXML
-    private Button prevBtn, playBtn, nextBtn;
+    private Button prevBtn, playBtn, nextBtn, goBack;
+    @FXML
+    private ToggleButton showQueue;
     @FXML
     private Slider volume;
     @FXML
-    private Label playLabel;
+    private Label playLabel, fileName, runningTime, endTime;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
     private ProgressBar progressBar;
 
+    Stage stage;
 
     int[] speeds = {25, 50, 75, 100, 125, 150, 175, 200};
     private LinkedList<File> list = new LinkedList<>();
@@ -52,7 +58,6 @@ public class AudioPlayerController implements Initializable {
     private Media media;
     private MediaPlayer mediaPlayer;
     RotateTransition rotate;
-    private int currIdx;
 
     public AudioPlayerController() {
     }
@@ -125,6 +130,7 @@ public class AudioPlayerController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
+        fileName.setText(currentFile.getName());
         if (mediaPlayer.getMedia().getMetadata().get("image") != null) {
             Image thumbnail = (Image) mediaPlayer.getMedia().getMetadata().get("image");
             logo.setImage(thumbnail);
@@ -145,15 +151,16 @@ public class AudioPlayerController implements Initializable {
 
     private void playFile(File file) {
         media = new Media(file.toURI().toString());
-        if (mediaPlayer.getMedia().getMetadata().get("image") != null) {
-            Image thumbnail = (Image) mediaPlayer.getMedia().getMetadata().get("image");
-            logo.setImage(thumbnail);
-        }
+//        if (mediaPlayer.getMedia().getMetadata().get("image") != null) {
+//            Image thumbnail = (Image) mediaPlayer.getMedia().getMetadata().get("image");
+//            logo.setImage(thumbnail);
+//        }
         if (mediaPlayer != null) {
             mediaPlayer.dispose();
             mediaPlayer.stop();
         }
         mediaPlayer = new MediaPlayer(media);
+        fileName.setText(currentFile.getName());
         Image icon = new Image("play.png");
         playPause.setImage(icon);
         playLabel.setText("PAUSE");
@@ -161,6 +168,7 @@ public class AudioPlayerController implements Initializable {
         rotate.play();
         mediaPlayer.play();
         startingTime();
+        System.out.println("Running: " + (media.getDuration().toSeconds()));
         mediaPlayer.setOnEndOfMedia(() -> {
             nextMedia(null);
         });
@@ -216,6 +224,7 @@ public class AudioPlayerController implements Initializable {
         rotate.play();
         mediaPlayer.play();
         startingTime();
+        fileName.setText(currentFile.getName());
     }
 
     public void nextMedia(ActionEvent e) {
@@ -230,6 +239,7 @@ public class AudioPlayerController implements Initializable {
         mediaPlayer.stop();
         mediaPlayer = new MediaPlayer(media);
 
+        fileName.setText(currentFile.getName());
         if (mode.equals("Single-Loop")) {
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         }
@@ -240,6 +250,7 @@ public class AudioPlayerController implements Initializable {
         mediaPlayer.play();
         rotate.play();
         startingTime();
+        fileName.setText(currentFile.getName());
     }
 
     public void startingTime() {
@@ -271,6 +282,27 @@ public class AudioPlayerController implements Initializable {
             task.cancel();
             task = null;
         }
+    }
+
+    public void playingQueue(ActionEvent e) {
+        System.out.println("Showing");
+    }
+
+    public void goingBack(ActionEvent e) throws IOException {
+        System.out.println("Going back");
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
+        Parent root = loader.load();
+        AudioFilesController afc = loader.getController();
+        afc.updateTextArea(list);
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void changeSpeed(ActionEvent e) throws IOException {
