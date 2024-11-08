@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,6 +12,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioPlayerController">
    <children>
+      <ImageView fitHeight="46.0" fitWidth="40.0" layoutX="494.0" layoutY="317.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../playingQueue.png" />
+         </image>
+      </ImageView>
       <ImageView fitHeight="47.0" fitWidth="46.0" layoutX="9.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../back.png" />
@@ -39,7 +43,7 @@
       </ImageView>
       <ImageView fx:id="playPause" fitHeight="35.0" fitWidth="46.0" layoutX="122.0" layoutY="319.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../play.png" />
+            <Image url="@../../../../pause.png" />
          </image>
       </ImageView>
       <Button fx:id="playBtn" layoutX="122.0" layoutY="318.0" mnemonicParsing="false" onAction="#playMedia" opacity="0.0" prefHeight="35.0" prefWidth="35.0">
@@ -74,19 +78,34 @@
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
          </font>
       </Label>
-      <ToggleButton fx:id="showQueue" layoutX="464.0" layoutY="323.0" mnemonicParsing="false" onAction="#playingQueue" prefHeight="26.0" prefWidth="130.0" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" text="Playing Queue" textAlignment="CENTER">
-         <font>
-            <Font name="Noto Sans Mono ExtraBold" size="13.0" />
-         </font>
-      </ToggleButton>
-      <Label fx:id="runningTime" alignment="CENTER" layoutX="9.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0" text="Label">
+      <Label fx:id="runningTime" alignment="CENTER" layoutX="9.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0" text="00:00">
          <font>
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
          </font>
       </Label>
-      <Label fx:id="endTime" alignment="CENTER" layoutX="548.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0" text="Label">
+      <Label fx:id="endTime" alignment="CENTER" layoutX="548.0" layoutY="274.0" prefHeight="18.0" prefWidth="46.0">
          <font>
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
+         </font>
+      </Label>
+      <Button fx:id="playingQueue" layoutX="494.0" layoutY="317.0" mnemonicParsing="false" onAction="#showPlayList" opacity="0.0" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 20px;">
+         <font>
+            <Font name="Noto Sans ExtraBold" size="13.0" />
+         </font>
+      </Button>
+      <Label alignment="CENTER" layoutX="463.0" layoutY="366.0" prefHeight="18.0" prefWidth="102.0" text="PLAYING QUEUE">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="240.0" layoutY="366.0" prefHeight="18.0" prefWidth="87.0" text="SPEED">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="353.0" layoutY="366.0" prefHeight="18.0" prefWidth="87.0" text="VOLUME">
+         <font>
+            <Font name="Noto Sans Mono ExtraBold" size="11.0" />
          </font>
       </Label>
    </children>

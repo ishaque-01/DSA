@@ -30,8 +30,8 @@ public class AudioFilesController implements Initializable {
     @FXML
     private ChoiceBox<String> modes;
 
-    private String modeSelected = "Single-Loop";
-    private String[] listModes = {"Select Mode", "Single-Loop", "List-Loop", "Shuffle"};
+    private String modeSelected = "List-Loop";
+    private String[] listModes = {"List-Loop", "Single-Loop", "Shuffle"};
 
     private LinkedList<File> list = new LinkedList<>();
 

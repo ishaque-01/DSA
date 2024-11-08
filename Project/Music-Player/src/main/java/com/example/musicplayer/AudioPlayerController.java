@@ -5,6 +5,7 @@ import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,9 +35,7 @@ public class AudioPlayerController implements Initializable {
     @FXML
     private ImageView logo, playPause;
     @FXML
-    private Button prevBtn, playBtn, nextBtn, goBack;
-    @FXML
-    private ToggleButton showQueue;
+    private Button prevBtn, playBtn, nextBtn, goBack, playingQueue;
     @FXML
     private Slider volume;
     @FXML
@@ -130,6 +129,12 @@ public class AudioPlayerController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.play();
+        mediaPlayer.setOnReady(() -> {
+            double durationInSeconds = mediaPlayer.getMedia().getDuration().toSeconds();
+            int minutes = (int) durationInSeconds / 60;
+            int seconds = (int) durationInSeconds % 60;
+            endTime.setText(String.format("%d:%02d", minutes, seconds));
+        });
         fileName.setText(currentFile.getName());
         if (mediaPlayer.getMedia().getMetadata().get("image") != null) {
             Image thumbnail = (Image) mediaPlayer.getMedia().getMetadata().get("image");
@@ -155,22 +160,33 @@ public class AudioPlayerController implements Initializable {
 //            Image thumbnail = (Image) mediaPlayer.getMedia().getMetadata().get("image");
 //            logo.setImage(thumbnail);
 //        }
-        if (mediaPlayer != null) {
-            mediaPlayer.dispose();
-            mediaPlayer.stop();
-        }
+
         mediaPlayer = new MediaPlayer(media);
         fileName.setText(currentFile.getName());
         Image icon = new Image("play.png");
         playPause.setImage(icon);
         playLabel.setText("PAUSE");
         isPlaying = true;
+        rotate.jumpTo(Duration.millis(0));
         rotate.play();
         mediaPlayer.play();
         startingTime();
-        System.out.println("Running: " + (media.getDuration().toSeconds()));
+
+        mediaPlayer.setOnReady(() -> {
+            double durationInSeconds = mediaPlayer.getMedia().getDuration().toSeconds();
+            int minutes = (int) durationInSeconds / 60;
+            int seconds = (int) durationInSeconds % 60;
+            endTime.setText(String.format("%d:%02d", minutes, seconds));
+        });
+
         mediaPlayer.setOnEndOfMedia(() -> {
-            nextMedia(null);
+            int currentIndex = list.indexOf(currentFile);
+            if (currentIndex == list.size() - 1) {
+                currentFile = list.getFirst();
+            } else {
+                currentFile = list.get(currentIndex + 1);
+            }
+            playFile(currentFile);
         });
         if (mediaPlayer != null) {
             mediaPlayer.play();
@@ -185,7 +201,7 @@ public class AudioPlayerController implements Initializable {
             cancelTimer();
             rotate.pause();
             mediaPlayer.pause();
-            Image icon = new Image("pause.png");
+            Image icon = new Image("play.png");
             playPause.setImage(icon);
             playLabel.setText("PLAY");
             isPlaying = false;
@@ -195,7 +211,7 @@ public class AudioPlayerController implements Initializable {
             startingTime();
             rotate.play();
             mediaPlayer.play();
-            Image icon = new Image("play.png");
+            Image icon = new Image("pause.png");
             playPause.setImage(icon);
             playLabel.setText("PAUSE");
             isPlaying = true;
@@ -221,6 +237,7 @@ public class AudioPlayerController implements Initializable {
         playPause.setImage(icon);
         playLabel.setText("PAUSE");
         isPlaying = true;
+        rotate.jumpTo(Duration.millis(0));
         rotate.play();
         mediaPlayer.play();
         startingTime();
@@ -248,6 +265,7 @@ public class AudioPlayerController implements Initializable {
         playLabel.setText("PAUSE");
         isPlaying = true;
         mediaPlayer.play();
+        rotate.jumpTo(Duration.millis(0));
         rotate.play();
         startingTime();
         fileName.setText(currentFile.getName());
@@ -261,6 +279,11 @@ public class AudioPlayerController implements Initializable {
                     double current = mediaPlayer.getCurrentTime().toSeconds();
                     double end = media.getDuration().toSeconds();
                     progressBar.setProgress(current / end);
+
+                    int minutes = (int) current / 60;
+                    int seconds = (int) current % 60;
+                    runningTime.setText(String.format("%d:%02d", minutes, seconds));
+
                     if (current / end >= 1) {
                         cancelTimer();
                         progressBar.setProgress(0.0);
@@ -284,10 +307,6 @@ public class AudioPlayerController implements Initializable {
         }
     }
 
-    public void playingQueue(ActionEvent e) {
-        System.out.println("Showing");
-    }
-
     public void goingBack(ActionEvent e) throws IOException {
         System.out.println("Going back");
         if(mediaPlayer != null) {
@@ -303,6 +322,10 @@ public class AudioPlayerController implements Initializable {
         scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void showPlayList(ActionEvent e) {
+        System.out.println("showPlayList");
     }
 
     public void changeSpeed(ActionEvent e) throws IOException {
