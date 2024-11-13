@@ -55,7 +55,7 @@ Single Repeat, List-Loop, and Shuffle.
 
 <b>Usage</b>
 <ol>
-    <li>Launch the application</li>
+    <li>Open the project in an IDE like intellij IDEA or Eclipse, config the JavaFX SDK, and run the main class.</li>
     <li>Select the file to add to your playlist</li>
     <li>Use control buttons to play, pause, next and previous.</li>
 </ol>
