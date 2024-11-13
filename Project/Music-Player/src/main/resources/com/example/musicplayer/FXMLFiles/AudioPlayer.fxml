@@ -19,7 +19,7 @@
       </ImageView>
       <ImageView fitHeight="46.0" fitWidth="40.0" layoutX="494.0" layoutY="317.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../playingQueue.png" />
+            <Image url="@../../../../playlist.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="47.0" fitWidth="46.0" layoutX="9.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
@@ -76,7 +76,7 @@
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
          </font>
       </Button>
-      <ProgressBar fx:id="progressBar" layoutX="8.0" layoutY="294.0" prefHeight="12.0" prefWidth="586.0" progress="0.0" />
+      <ProgressBar fx:id="progressBar" layoutX="8.0" layoutY="294.0" prefHeight="12.0" prefWidth="586.0" progress="0.0" style="-fx-accent: #7f247f;" />
       <ComboBox fx:id="speedBox" layoutX="258.0" layoutY="314.0" onAction="#changeSpeed" opacity="0.0" prefHeight="46.0" prefWidth="20.0" style="-fx-border-radius: 40px; -fx-background-radius: 40px;" />
       <Label fx:id="fileName" alignment="CENTER" layoutX="120.0" layoutY="14.0" prefHeight="40.0" prefWidth="362.0" text="NAME">
          <font>
