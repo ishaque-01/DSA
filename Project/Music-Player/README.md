@@ -1,9 +1,6 @@
 <b>JavaFX Music Player</b>
 
-A simple music player application developed with <br>
-JavaFx, design to play audio files with features like <br>
-play/pause, next/previous track, with playing modes <br>
-Single Repeat, List-Loop, and Shuffle.
+A simple music player application developed with JavaFx, design to play audio files with features like play/pause, next/previous track, with playing modes Single Repeat, List-Loop, and Shuffle.
 
 <b>Features</b>
 <br>
