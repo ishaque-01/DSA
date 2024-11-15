@@ -17,10 +17,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class AudioPlayerController implements Initializable {
 
@@ -108,11 +105,22 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void playList(LinkedList<File> list) {
+        LinkedList<File> shuffledList = new LinkedList<>(list);
+        Collections.shuffle(shuffledList);
+        for (File f:shuffledList) {
+            System.out.println(f.getName());
+        }
         currentFile = list.getFirst();
         playCurrentFile(currentFile);
+
     }
 
     public void playShuffle(LinkedList<File> list) {
+//        LinkedList<File> shuffledList = new LinkedList<>(list);
+//        Collections.shuffle(shuffledList);
+//        for (File f:shuffledList) {
+//            System.out.println(f.getName());
+//        }
     }
 
     private void playCurrentFile(File file) {
