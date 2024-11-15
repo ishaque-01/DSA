@@ -19,7 +19,7 @@ public class Trees {
 
         public Node createTree(int[] nodes) {
             idx++;
-            if (nodes[idx] == -1)
+            if (idx >= nodes.length || nodes[idx] == -1)
                 return null;
 
             Node newNode = new Node(nodes[idx]);
