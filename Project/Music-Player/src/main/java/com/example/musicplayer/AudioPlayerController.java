@@ -5,6 +5,7 @@ import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +42,7 @@ public class AudioPlayerController implements Initializable {
     @FXML
     private ImageView logo, playPause;
     @FXML
-    private Button prevBtn, nextBtn, playBtn, backBtn, playingQueue;
+    private Button prevBtn, nextBtn, playBtn, backBtn, playingQueue, shuffle;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
@@ -159,21 +160,18 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void playList(LinkedList<File> list) {
-        LinkedList<File> shuffledList = new LinkedList<>(list);
-        Collections.shuffle(shuffledList);
         currentFile = list.getFirst();
         playCurrentFile(currentFile);
-
     }
 
     public void playShuffle(LinkedList<File> list) {
-//        LinkedList<File> shuffledList = new LinkedList<>(list);
-//        Collections.shuffle(shuffledList);
-//        for (File f:shuffledList) {
-//            System.out.println(f.getName());
-//        }
-
-        System.out.println("playing Shuffle");
+        LinkedList<File> shuffledList = new LinkedList<>(list);
+        Collections.shuffle(shuffledList);
+        for (File f:shuffledList) {
+            System.out.println(f.getName());
+        }
+        currentFile = list.getFirst();
+        playCurrentFile(currentFile);
     }
 
     private void playCurrentFile(File file) {
@@ -185,10 +183,12 @@ public class AudioPlayerController implements Initializable {
         mediaPlayer = new MediaPlayer(media);
         fileName.setText(currentFile.getName());
         mediaPlayer.play();
+
         rotate.jumpTo(Duration.millis(0));
         startTime();
         changeSpeed(null);
         mediaPlayer.setVolume(volume.getValue() * 0.01);
+
         mediaPlayer.setOnReady(() -> {
             double end = media.getDuration().toSeconds();
             int minutes = (int) (end / 60);
@@ -286,6 +286,10 @@ public class AudioPlayerController implements Initializable {
 
     public void showPlayList(ActionEvent e) {
         System.out.println("Showing List");
+    }
+
+    public void changeMode(ActionEvent e) {
+        System.out.println("Changed Mode!");
     }
 
     public void startTime() {
