@@ -22,16 +22,12 @@ public class HomePageController implements Initializable {
 
     @FXML
     private ImageView logoImg;
+    @FXML
     private Button audioBtn, videoBtn, exitBtn;
+    @FXML
     private Stage stage;
 
     public void audio(ActionEvent e) throws IOException {
-//        root = FXMLLoader.load(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
-//        stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
-//        stage.setScene(scene);
-//        stage.show();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
         Parent root = loader.load();
         AudioFilesController afc = loader.getController();
@@ -40,7 +36,6 @@ public class HomePageController implements Initializable {
         scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-
     }
 
     public void video(ActionEvent e) {
@@ -61,5 +56,9 @@ public class HomePageController implements Initializable {
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.setByAngle(360);
         rotate.play();
+
+        audioBtn.setFocusTraversable(false);
+        videoBtn.setFocusTraversable(false);
+        exitBtn.setFocusTraversable(false);
     }
 }

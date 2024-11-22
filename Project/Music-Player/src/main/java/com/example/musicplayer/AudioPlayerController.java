@@ -7,15 +7,21 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -45,6 +51,7 @@ public class AudioPlayerController implements Initializable {
     @FXML
     private ProgressBar progressBar;
 
+    double volumeValue;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -55,10 +62,9 @@ public class AudioPlayerController implements Initializable {
         rotate.setDuration(Duration.seconds(6));
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.play();
-
+        
         playPause.setImage(new Image("pause.png"));
         playLabel.setText("Pause");
-
         for (int speed : speeds) {
             speedBox.getItems().add(speed + "%");
         }
@@ -66,8 +72,16 @@ public class AudioPlayerController implements Initializable {
         volume.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(mediaPlayer.isMute()) {
+                    mediaPlayer.setMute(false);
+                }
                 mediaPlayer.setVolume(newValue.doubleValue() * 0.01);
+                volumeValue = newValue.doubleValue() * 0.01;
             }
+        });
+
+        volume.setOnKeyReleased(e -> {
+            volume.getParent().requestFocus();
         });
 
         startTime();
@@ -81,6 +95,46 @@ public class AudioPlayerController implements Initializable {
             mediaPlayer.seek(Duration.seconds(newTime));
             progressBar.setProgress(progress);
         });
+
+        Platform.runLater(() -> {
+            progressBar.getScene().setOnKeyPressed(e -> {
+                switch (e.getCode()) {
+                    case M:
+                        mediaPlayer.setMute(!mediaPlayer.isMute());
+                        break;
+                    case N:
+                        nextMedia(null);
+                        break;
+                    case P:
+                        prevMedia(null);
+                        break;
+                    case SPACE:
+                        playPauseMedia(null);
+                        break;
+                    case UP:
+                        adjustVolume("up");
+                        break;
+                    case DOWN:
+                        adjustVolume("down");
+                        break;
+                    case LEFT:
+                        mediaPlayer.seek(Duration.seconds(mediaPlayer.getCurrentTime().toSeconds() - 10));
+                        break;
+                    case RIGHT:
+                        mediaPlayer.seek(Duration.seconds(mediaPlayer.getCurrentTime().toSeconds() + 10));
+                        break;
+                }
+            });
+        });
+
+        backBtn.setFocusTraversable(false);
+        nextBtn.setFocusTraversable(false);
+        prevBtn.setFocusTraversable(false);
+        playBtn.setFocusTraversable(false);
+        speedBox.setFocusTraversable(false);
+        volume.setFocusTraversable(false);
+        playingQueue.setFocusTraversable(false);
+
     }
 
     public void setPlayListAndMode(LinkedList<File> list, String mode) {
@@ -107,9 +161,6 @@ public class AudioPlayerController implements Initializable {
     public void playList(LinkedList<File> list) {
         LinkedList<File> shuffledList = new LinkedList<>(list);
         Collections.shuffle(shuffledList);
-        for (File f:shuffledList) {
-            System.out.println(f.getName());
-        }
         currentFile = list.getFirst();
         playCurrentFile(currentFile);
 
@@ -121,6 +172,8 @@ public class AudioPlayerController implements Initializable {
 //        for (File f:shuffledList) {
 //            System.out.println(f.getName());
 //        }
+
+        System.out.println("playing Shuffle");
     }
 
     private void playCurrentFile(File file) {
@@ -161,6 +214,11 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void nextMedia(ActionEvent e) {
+        isPlaying = true;
+        playPause.setImage(new Image("pause.png"));
+        playLabel.setText("Pause");
+        rotate.play();
+
         int currIdx = list.indexOf(currentFile);
         if(currIdx == list.size() - 1) {
             currentFile = list.getFirst();
@@ -171,6 +229,11 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void prevMedia(ActionEvent e) {
+        isPlaying = true;
+        playPause.setImage(new Image("pause.png"));
+        playLabel.setText("Pause");
+        rotate.play();
+
         int currIdx = list.indexOf(currentFile);
         if(currIdx == 0) {
             currentFile = list.getLast();
@@ -180,14 +243,24 @@ public class AudioPlayerController implements Initializable {
         playCurrentFile(currentFile);
     }
 
-    public void goingBack(ActionEvent e) {
-        System.out.println("Going Back");
+    public void goingBack(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
+        Parent root = loader.load();
+        AudioFilesController afc = loader.getController();
+        afc.printOnTextArea(list);
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.dispose();
+        }
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void changeSpeed(ActionEvent e) {
         if (speedBox.getValue() != null) {
             double speed = Integer.parseInt(speedBox.getValue().substring(0, speedBox.getValue().length() - 1)) * 0.01;
-            System.out.println("Speed: " + speed);
             mediaPlayer.setRate(speed);
         }
     }
@@ -250,5 +323,21 @@ public class AudioPlayerController implements Initializable {
             task.cancel();
             task = null;
         }
+    }
+
+    public void adjustVolume(String value) {
+        if(mediaPlayer.isMute()) {
+            mediaPlayer.setMute(false);
+        }
+        double currVol = mediaPlayer.getVolume();
+        double updatedVol = 0.0;
+        if(value.equalsIgnoreCase("up")) {
+            updatedVol = Math.min(currVol + 0.1, 1.0);
+        } else if(value.equalsIgnoreCase("down")) {
+            updatedVol = Math.max(currVol - 0.1, 0.0);
+        }
+        mediaPlayer.setVolume(updatedVol);
+        volumeValue = updatedVol;
+        volume.setValue(updatedVol * 100);
     }
 }

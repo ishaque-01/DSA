@@ -22,9 +22,9 @@ import java.util.ResourceBundle;
 public class AudioFilesController implements Initializable {
 
     @FXML
-    private Button backBtn, addBtn, playBtn;
+    private Button backBtn, addBtn, playBtn, shuffleAll;
     @FXML
-    private TextField statusField;
+    private TextField statusField, searchBar;
     @FXML
     private TextArea filesList;
     @FXML
@@ -55,7 +55,22 @@ public class AudioFilesController implements Initializable {
 //        :: method reference operator to link method
         modes.setOnAction(this::getMode);
 
+        modes.setFocusTraversable(false);
+        backBtn.setFocusTraversable(false);
+        addBtn.setFocusTraversable(false);
+        playBtn.setFocusTraversable(false);
+        statusField.setFocusTraversable(false);
+        filesList.setFocusTraversable(false);
+        searchBar.setFocusTraversable(false);
+    }
 
+    public void searchFile() {
+        String line = searchBar.getText();
+        for(File f:list) {
+            if(f.getName().contains(line)) {
+                filesList.setText(f.getName() + "\n");
+            }
+        }
     }
 
     public void audioPlayer(ActionEvent e) throws IOException {
@@ -100,6 +115,7 @@ public class AudioFilesController implements Initializable {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac", "*.m4a", "*.flac")
         );
+
         File selectedFile = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
         if (selectedFile != null) {
             if (!list.contains(selectedFile)) {
@@ -125,8 +141,15 @@ public class AudioFilesController implements Initializable {
         filesList.setText(listNames.toString());
     }
 
-    public void updateTextArea(LinkedList<File> list) {
+    public void printOnTextArea(LinkedList<File> list) {
         this.list = list;
-        printOnTextArea(filesList);
+        filesList.setText("");
+        int count = 1;
+        StringBuilder listNames = new StringBuilder();
+        for (File file : list) {
+            listNames.append(count++).append("- ").append(file.getName()).append("\n\n");
+        }
+        filesList.setText(listNames.toString());
     }
+
 }
