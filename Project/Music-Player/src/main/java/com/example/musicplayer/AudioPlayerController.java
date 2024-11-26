@@ -135,7 +135,7 @@ public class AudioPlayerController implements Initializable {
         speedBox.setFocusTraversable(false);
         volume.setFocusTraversable(false);
         playingQueue.setFocusTraversable(false);
-
+        shuffle.setFocusTraversable(false);
     }
 
     public void setPlayListAndMode(LinkedList<File> list, String mode) {

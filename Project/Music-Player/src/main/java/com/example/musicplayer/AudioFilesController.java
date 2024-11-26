@@ -28,7 +28,7 @@ public class AudioFilesController implements Initializable {
     @FXML
     private Button backBtn, addBtn, playBtn, createBtn;
     @FXML
-    private TextField statusField, playListName,  playlistStatus;
+    private TextField statusField, playListName, playlistStatus;
     @FXML
     private TextArea filesList;
     @FXML
@@ -53,16 +53,16 @@ public class AudioFilesController implements Initializable {
         statusField.setFocusTraversable(false);
 
         modes.getItems().add("No Playlist Available!");
-//        modes.getSelectionModel().selectFirst();
+        modes.getSelectionModel().selectFirst();
 //        :: method reference operator to link method
-        modes.setOnAction(e -> {
+        modes.setOnAction(event -> {
             try {
-                getPlaylist(e);
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
+                getPlaylist(event);
+            } catch (IOException exception) {
+                System.err.println("Error: " + exception);
             }
         });
-        updateModes();
+        updateMode();
 
         modes.setFocusTraversable(false);
         backBtn.setFocusTraversable(false);
@@ -73,6 +73,99 @@ public class AudioFilesController implements Initializable {
         createBtn.setFocusTraversable(false);
         playListName.setFocusTraversable(false);
         playlistStatus.setFocusTraversable(false);
+    }
+
+
+    public void updateMode() {
+        File directory = new File("Playlists");
+        if(directory.isDirectory() && directory.exists() && directory.listFiles().length > 0) {
+            modes.getItems().clear();
+            modes.getItems().add("Playlists Available");
+            for(File f:directory.listFiles()) {
+                modes.getItems().add(f.getName());
+            }
+            modes.getSelectionModel().selectFirst();
+        } else {
+            modes.getItems().clear();
+            modes.getItems().add("No Playlists Available");
+            modes.getSelectionModel().selectFirst();
+        }
+    }
+
+    public void getPlaylist(ActionEvent e) throws FileNotFoundException {
+        list.clear();
+        filesList.setText("");
+        if(!modes.getValue().equalsIgnoreCase("No Playlist Available!") && !modes.getValue().equalsIgnoreCase("Playlist Available")) {
+            String path = "Playlists/" + modes.getValue();
+            File playlist = new File(path);
+            if(playlist.exists()) {
+                Scanner scan = new Scanner(playlist);
+                StringBuilder sb = new StringBuilder();
+                int count = 1;
+                while(scan.hasNextLine()) {
+                    File newFile = new File(scan.nextLine());
+                    if(!list.contains(newFile)) {
+                        list.add(newFile);
+                        int sub = 6 + newFile.getAbsolutePath().indexOf("Music/");
+                        sb.append(count++).append("- ").append(newFile.getAbsolutePath().substring(sub)).append("\n\n");
+                    }
+                    filesList.setText(sb.toString());
+                }
+            }
+        }
+    }
+
+    public void createPlaylist(ActionEvent e) {
+
+        String playlist = modes.getValue();
+        File directory = new File("Playlists/");
+        if(directory.isDirectory() && directory.exists()) {
+
+        }
+
+//        if (!filesList.getText().isBlank() && !playListName.getText().isBlank()) {
+//            String path = "Playlists/" + playListName.getText();
+//            File newPlaylist = new File(path);
+//            if (newPlaylist.getParentFile().isDirectory()) {
+//                System.out.println("New File is in: " + newPlaylist.getParentFile());
+//            }
+//            try {
+//                if (newPlaylist.createNewFile()) {
+//                    playlistStatus.setText("Playlist Created!");
+//                } else {
+//                    playlistStatus.setText("Playlist Updated!");
+//                }
+//                try {
+//                    FileWriter writer = new FileWriter(newPlaylist);
+//                    for (File f:list) {
+//                        writer.write(f.getAbsolutePath() + "\n");
+//                    }
+//                    System.out.println("List Empty: " + list.isEmpty());
+//                    writer.close();
+//                } catch (IOException exception) {
+//                    System.err.println("Error in writing in playlist: \n" + exception);
+//                }
+//            } catch (IOException io) {
+//                System.err.println("Error in creating new playlist: \n" + io);
+//            }
+//        } else {
+//            if (filesList.getText().isBlank() && playListName.getText().isBlank()) {
+//                playlistStatus.setText("Add files and select name for playlist!");
+//            } else if (filesList.getText().isBlank() && !playListName.getText().isBlank()) {
+//                playlistStatus.setText("Add Files!");
+//            } else {
+//                playlistStatus.setText("Select Name for playlist!");
+//            }
+//        }
+//        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+//        delay.setOnFinished(event -> {
+//            playlistStatus.setText("");
+//            playListName.setText("");
+//        });
+//        delay.play();
+//        updateMode();
+//        System.out.println("Print On textArea");
+//        printOnTextArea(list);
     }
 
 
@@ -97,27 +190,6 @@ public class AudioFilesController implements Initializable {
         }
     }
 
-    public void getPlaylist(ActionEvent e) throws FileNotFoundException {
-        list.clear();
-        if(!modes.getValue().equalsIgnoreCase("playlist available") && !modes.getValue().equalsIgnoreCase("No Playlists Available")) {
-            String path = "Playlists/" + modes.getValue();
-            filesList.setText("");
-            StringBuilder sb = new StringBuilder();
-            File listFile = new File(path);
-            Scanner scan = new Scanner(listFile);
-            int count = 1;
-            while(scan.hasNextLine()) {
-                String line = scan.nextLine();
-                int startIdx = line.indexOf("Music/");
-                File playlistFile = new File(line);
-                list.add(playlistFile);
-                sb.append(count++).append("- ").append(line.substring(startIdx + 6, line.length() - 1)).append("\n\n");
-            }
-            scan.close();
-            filesList.setText(sb.toString());
-        }
-    }
-
     public void goBack(ActionEvent e) throws IOException {
         System.out.println("Changing scene");
         root = FXMLLoader.load(getClass().getResource("FXMLFiles/Main.fxml"));
@@ -132,9 +204,7 @@ public class AudioFilesController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Audio Files");
 
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac", "*.m4a", "*.flac")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac", "*.m4a", "*.flac"));
 
         File selectedFile = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
         if (selectedFile != null) {
@@ -149,64 +219,6 @@ public class AudioFilesController implements Initializable {
             delay.setOnFinished(event -> statusField.setText("Waiting For File....!!!"));
             delay.play();
         }
-    }
-
-    public void createPlaylist(ActionEvent e) {
-        if(playListName.getText().equalsIgnoreCase("") || list.isEmpty()) {
-            playlistStatus.setText("Please Enter File Name! or Select Song First!");
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            delay.setOnFinished(event -> playlistStatus.setText(""));
-            delay.play();
-        } else {
-            String path = "Playlists/" + playListName.getText();
-            File newFile = new File(path);
-
-            File directory = newFile.getParentFile();
-            if(!directory.exists()){
-                directory.mkdirs();
-            }
-
-            try {
-                if(newFile.createNewFile()) {
-                    playlistStatus.setText("Playlist Created!");
-                    PauseTransition delay = new PauseTransition(Duration.seconds(2));
-                    delay.setOnFinished(event -> playlistStatus.setText(""));
-                    delay.play();
-                } else {
-                    playlistStatus.setText("Playlist Updated!");
-                    PauseTransition delay = new PauseTransition(Duration.seconds(2));
-                    delay.setOnFinished(event -> playlistStatus.setText(""));
-                    delay.play();
-                }
-                FileWriter writer = new FileWriter(newFile);
-                for(File f:list) {
-                    writer.write( f.getAbsolutePath());
-                }
-                writer.close();
-            } catch (IOException io) {
-                System.err.println("Error Occurred");
-            } finally {
-                updateModes();
-            }
-        }
-    }
-
-    public void updateModes() {
-        modes.getItems().clear();
-
-        File myDirectory = new File("Playlists");
-
-        if(myDirectory.exists() && myDirectory.isDirectory()) {
-            for(File f: Objects.requireNonNull(myDirectory.listFiles())) {
-                modes.getItems().add(f.getName());
-            }
-        }
-        if(modes.getItems().isEmpty()) {
-            modes.getItems().add("No Playlists Available");
-        } else {
-            modes.getItems().addFirst("PlayList Available");
-        }
-        modes.getSelectionModel().selectFirst();
     }
 
     private void printOnTextArea(TextArea filesList) {
