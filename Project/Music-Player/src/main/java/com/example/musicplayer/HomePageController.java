@@ -33,7 +33,6 @@ public class HomePageController implements Initializable {
         AudioFilesController afc = loader.getController();
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("AudioStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

@@ -16,7 +16,6 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("FXMLFiles/Main.fxml"));
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("MainStyle.css").toExternalForm());
             Image icon = new Image("logo.png");
             stage.getIcons().add(icon);
             stage.setScene(scene);
