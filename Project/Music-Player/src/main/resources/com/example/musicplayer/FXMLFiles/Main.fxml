@@ -1,21 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="637.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.HomePageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="264.0" prefWidth="595.0" style="-fx-background-color: #A5A5A5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.HomePageController">
    <children>
-      <ImageView fitHeight="392.0" fitWidth="637.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../bgImage.jpg" />
-         </image>
-      </ImageView>
-      <Button fx:id="audioBtn" layoutX="78.0" layoutY="175.0" mnemonicParsing="false" onAction="#audio" prefHeight="33.0" prefWidth="135.0" text="AUDIO" />
-      <Button fx:id="videoBtn" layoutX="78.0" layoutY="219.0" mnemonicParsing="false" onAction="#video" prefHeight="33.0" prefWidth="135.0" text="VIDEO" />
-      <Button fx:id="exitBtn" layoutX="78.0" layoutY="264.0" mnemonicParsing="false" onAction="#exit" prefHeight="33.0" prefWidth="135.0" text="EXIT" />
-      <ImageView fx:id="logoImg" fitHeight="256.0" fitWidth="256.0" layoutX="369.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="audioBtn" layoutX="89.0" layoutY="70.0" mnemonicParsing="false" onAction="#audio" prefHeight="33.0" prefWidth="135.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="AUDIO">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="Noto Sans Condensed ExtraBold Italic" size="18.0" />
+         </font></Button>
+      <Button fx:id="videoBtn" layoutX="89.0" layoutY="114.0" mnemonicParsing="false" onAction="#video" prefHeight="33.0" prefWidth="135.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="VIDEO">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="Noto Sans Condensed ExtraBold Italic" size="18.0" />
+         </font></Button>
+      <Button fx:id="exitBtn" layoutX="89.0" layoutY="159.0" mnemonicParsing="false" onAction="#exit" prefHeight="33.0" prefWidth="135.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="EXIT">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="Noto Sans Condensed ExtraBold" size="18.0" />
+         </font></Button>
+      <ImageView fx:id="logoImg" fitHeight="256.0" fitWidth="256.0" layoutX="299.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../logo.png" />
          </image>

@@ -6,13 +6,16 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioFilesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #A5A5A5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioFilesController">
    <children>
       <Pane layoutX="14.0" layoutY="14.0" prefHeight="155.0" prefWidth="226.0">
          <children>
@@ -21,7 +24,7 @@
                   <Image url="@../../../../addIcon.png" />
                </image>
             </ImageView>
-            <TextField fx:id="statusField" alignment="CENTER" editable="false" layoutY="115.0" prefHeight="26.0" prefWidth="226.0" text="Waiting For File..!!!">
+            <TextField fx:id="statusField" alignment="CENTER" editable="false" layoutY="115.0" prefHeight="26.0" prefWidth="226.0" style="-fx-background-color: #212121; -fx-text-fill: #e5e5e5;" text="Waiting For File..!!!">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="12.0" />
                </font></TextField>
@@ -30,7 +33,7 @@
       </Pane>
       <Pane layoutX="259.0" layoutY="14.0" prefHeight="374.0" prefWidth="325.0">
          <children>
-            <TextArea fx:id="filesList" editable="false" layoutX="-1.0" layoutY="-1.0" prefHeight="276.0" prefWidth="325.0" wrapText="true">
+            <TextArea fx:id="filesList" editable="false" layoutX="-1.0" layoutY="-1.0" prefHeight="276.0" prefWidth="325.0" style="-fx-control-inner-background: #161617; -fx-text-fill: #e5e5e5;" wrapText="true">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="12.0" />
                </font>
@@ -38,42 +41,92 @@
                   <Cursor fx:constant="OPEN_HAND" />
                </cursor>
             </TextArea>
-            <TextField fx:id="playListName" layoutX="-1.0" layoutY="283.0" prefHeight="26.0" prefWidth="183.0" promptText="Enter Name for Playlist">
+            <TextField fx:id="playListName" layoutX="-1.0" layoutY="283.0" prefHeight="26.0" prefWidth="183.0" promptText="Enter Name for Playlist" style="-fx-text-fill: #e5e5e5; -fx-background-color: #212121;">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="12.0" />
                </font>
             </TextField>
-            <Button fx:id="createBtn" layoutX="188.0" layoutY="283.0" mnemonicParsing="false" onAction="#createPlaylist" prefHeight="26.0" prefWidth="60.0" text="Create">
+            <Button fx:id="createBtn" layoutX="188.0" layoutY="283.0" mnemonicParsing="false" onAction="#createPlaylist" prefHeight="26.0" prefWidth="60.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="Create">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="12.0" />
                </font>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect>
             </Button>
-            <TextField fx:id="playlistStatus" editable="false" layoutY="322.0" prefHeight="26.0" prefWidth="325.0">
+            <TextField fx:id="playlistStatus" editable="false" layoutY="322.0" prefHeight="26.0" prefWidth="325.0" style="-fx-background-color: #212121; -fx-text-fill: #e5e5e5;">
                <font>
                   <Font name="Noto Sans Condensed ExtraBold" size="13.0" />
                </font>
             </TextField>
-            <Button fx:id="addPlaylist" disable="true" layoutX="255.0" layoutY="283.0" mnemonicParsing="false" onAction="#addInPlaylist" prefHeight="26.0" prefWidth="67.0" text="ADD">
+            <Button fx:id="addPlaylist" disable="true" layoutX="255.0" layoutY="283.0" mnemonicParsing="false" onAction="#addInPlaylist" prefHeight="26.0" prefWidth="67.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="ADD">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="12.0" />
                </font>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect>
             </Button>
          </children>
       </Pane>
       <Pane layoutX="14.0" layoutY="201.0" prefHeight="155.0" prefWidth="203.0">
          <children>
-            <Button fx:id="playBtn" layoutX="16.0" layoutY="14.0" mnemonicParsing="false" onAction="#audioPlayer" prefHeight="34.0" prefWidth="172.0" text="PLAY">
+            <Button fx:id="playBtn" layoutX="16.0" layoutY="14.0" mnemonicParsing="false" onAction="#audioPlayer" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="PLAY">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="13.0" />
                </font>
                <opaqueInsets>
                   <Insets />
-               </opaqueInsets></Button>
-            <Button fx:id="backBtn" layoutX="16.0" layoutY="107.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="172.0" text="BACK">
+               </opaqueInsets>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect></Button>
+            <Button fx:id="backBtn" layoutX="16.0" layoutY="107.0" mnemonicParsing="false" onAction="#goBack" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;" text="BACK">
                <font>
                   <Font name="Noto Sans Mono ExtraBold" size="13.0" />
-               </font></Button>
-            <ChoiceBox fx:id="modes" layoutX="16.0" layoutY="61.0" prefHeight="34.0" prefWidth="172.0" />
+               </font>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect></Button>
+            <ChoiceBox fx:id="modes" layoutX="16.0" layoutY="61.0" prefHeight="34.0" prefWidth="172.0" style="-fx-background-color: #161617; -fx-text-fill: #e5e5e5;">
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect></ChoiceBox>
          </children>
       </Pane>
    </children>

@@ -47,7 +47,6 @@ public class AudioFilesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        statusField.setFocusTraversable(false);
 
         modes.getItems().add("No Playlist Available!");
         modes.getSelectionModel().selectFirst();
@@ -62,6 +61,7 @@ public class AudioFilesController implements Initializable {
         updateMode();
 
         modes.setFocusTraversable(false);
+        statusField.setFocusTraversable(false);
         backBtn.setFocusTraversable(false);
         addBtn.setFocusTraversable(false);
         playBtn.setFocusTraversable(false);
@@ -71,7 +71,6 @@ public class AudioFilesController implements Initializable {
         playListName.setFocusTraversable(false);
         playlistStatus.setFocusTraversable(false);
         addPlaylist.setFocusTraversable(false);
-
         addPlaylist.setDisable(true);
     }
 
@@ -118,9 +117,6 @@ public class AudioFilesController implements Initializable {
             addPlaylist.setDisable(true);
         }
     }
-
-    // -------------------------------In Process------------------------------------------------
-    // Add Button in Process
 
     public void addInPlaylist(ActionEvent e) throws IOException {
         String currPlaylistPath = playlistPath + modes.getValue();
@@ -190,8 +186,6 @@ public class AudioFilesController implements Initializable {
         delay.play();
     }
 
-    // -------------------------------In Process------------------------------------------------
-
     public void audioPlayer(ActionEvent e) throws IOException {
 
         if (!list.isEmpty()) {
@@ -226,7 +220,7 @@ public class AudioFilesController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Audio Files");
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.aac", "*.m4a", "*.flac"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a"));
 
         File selectedFile = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
         if (selectedFile != null) {

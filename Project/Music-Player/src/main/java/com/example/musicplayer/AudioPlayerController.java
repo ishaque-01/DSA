@@ -1,6 +1,7 @@
 package com.example.musicplayer;
 
 import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -16,8 +17,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -34,25 +37,29 @@ public class AudioPlayerController implements Initializable {
     int[] speeds = {25, 50, 75, 100, 125, 150, 175, 200};
     private RotateTransition rotate;
     private LinkedList<File> list = new LinkedList<>();
-    private String mode = "";
+    private String mode = "", highlightFile = "";
     private boolean isPlaying = true;
     private Timer timer;
     private TimerTask task;
+    double volumeValue;
 
     @FXML
-    private ImageView logo, playPause;
+    private ImageView logo, playPause, fileImage;
     @FXML
-    private Button prevBtn, nextBtn, playBtn, backBtn, playingQueue, shuffle;
+    private Button prevBtn, nextBtn, playBtn, backBtn, playingQueue, shuffle, exitQueue;
     @FXML
     private ComboBox<String> speedBox;
     @FXML
     private Slider volume;
     @FXML
-    private Label fileName, runningTime, endTime, playLabel;
+    private Label fileName, runningTime, endTime, playLabel, switchMode;
     @FXML
     private ProgressBar progressBar;
+    @FXML
+    private ListView<String> playingList = new ListView<>();
+    @FXML
+    private Pane listPane;
 
-    double volumeValue;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -63,7 +70,7 @@ public class AudioPlayerController implements Initializable {
         rotate.setDuration(Duration.seconds(6));
         rotate.setInterpolator(Interpolator.LINEAR);
         rotate.play();
-        
+
         playPause.setImage(new Image("pause.png"));
         playLabel.setText("Pause");
         for (int speed : speeds) {
@@ -73,7 +80,7 @@ public class AudioPlayerController implements Initializable {
         volume.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(mediaPlayer.isMute()) {
+                if (mediaPlayer.isMute()) {
                     mediaPlayer.setMute(false);
                 }
                 mediaPlayer.setVolume(newValue.doubleValue() * 0.01);
@@ -128,6 +135,27 @@ public class AudioPlayerController implements Initializable {
             });
         });
 
+        playingList.setStyle("-fx-background-color: #2F2F2F; -fx-text-fill: #e5e5e5;");
+        playingList.setCellFactory(listView -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.equals(highlightFile)) {
+                        setStyle("-fx-background-color:  #2F2F2F; -fx-text-fill:  #e5e5e5;");
+                    } else {
+                        setStyle("-fx-background-color:  #161617; -fx-text-fill:  #e5e5e5;");
+                    }
+                }
+            }
+        });
+        listPane.setVisible(false);
+
         backBtn.setFocusTraversable(false);
         nextBtn.setFocusTraversable(false);
         prevBtn.setFocusTraversable(false);
@@ -136,11 +164,25 @@ public class AudioPlayerController implements Initializable {
         volume.setFocusTraversable(false);
         playingQueue.setFocusTraversable(false);
         shuffle.setFocusTraversable(false);
+        playingList.setFocusTraversable(false);
+        listPane.setFocusTraversable(false);
+        exitQueue.setFocusTraversable(false);
     }
 
     public void setPlayListAndMode(LinkedList<File> list, String mode) {
         this.list = list;
         this.mode = mode;
+
+        switchMode.setText(mode);
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(e -> {
+           switchMode.setVisible(false);
+        });
+        delay.play();
+
+        for (File f : list) {
+            playingList.getItems().add(f.getName());
+        }
 
         switch (mode) {
             case "List-Loop":
@@ -167,7 +209,7 @@ public class AudioPlayerController implements Initializable {
     public void playShuffle(LinkedList<File> list) {
         LinkedList<File> shuffledList = new LinkedList<>(list);
         Collections.shuffle(shuffledList);
-        for (File f:shuffledList) {
+        for (File f : shuffledList) {
             System.out.println(f.getName());
         }
         currentFile = list.getFirst();
@@ -176,14 +218,15 @@ public class AudioPlayerController implements Initializable {
 
     private void playCurrentFile(File file) {
         media = new Media(currentFile.toURI().toString());
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
+
         mediaPlayer = new MediaPlayer(media);
         fileName.setText(currentFile.getName());
         mediaPlayer.play();
-
+        highlightFile(file.getName());
         rotate.jumpTo(Duration.millis(0));
         startTime();
         changeSpeed(null);
@@ -194,13 +237,21 @@ public class AudioPlayerController implements Initializable {
             int minutes = (int) (end / 60);
             int seconds = (int) (end % 60);
             endTime.setText(String.format("%02d:%02d", minutes, seconds));
+
+            if(media.getMetadata().containsKey("image")) {
+                Image icon = (Image) media.getMetadata().get("image");
+                fileImage.setImage(icon);
+            } else {
+                fileImage.setImage(null);
+            }
+
         });
 
         mediaPlayer.setOnEndOfMedia(() -> {
-            if(mode.equals("Single-Loop")) {
-              mediaPlayer.seek(Duration.ZERO);
-              mediaPlayer.play();
-              rotate.jumpTo(Duration.millis(0));
+            if (mode.equalsIgnoreCase("Single-Loop")) {
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.play();
+                rotate.jumpTo(Duration.millis(0));
             } else {
                 int currIdx = list.indexOf(currentFile);
                 if (currIdx == list.size() - 1) {
@@ -220,7 +271,7 @@ public class AudioPlayerController implements Initializable {
         rotate.play();
 
         int currIdx = list.indexOf(currentFile);
-        if(currIdx == list.size() - 1) {
+        if (currIdx == list.size() - 1) {
             currentFile = list.getFirst();
         } else {
             currentFile = list.get(currIdx + 1);
@@ -235,7 +286,7 @@ public class AudioPlayerController implements Initializable {
         rotate.play();
 
         int currIdx = list.indexOf(currentFile);
-        if(currIdx == 0) {
+        if (currIdx == 0) {
             currentFile = list.getLast();
         } else {
             currentFile = list.get(currIdx - 1);
@@ -248,7 +299,7 @@ public class AudioPlayerController implements Initializable {
         Parent root = loader.load();
         AudioFilesController afc = loader.getController();
         afc.printOnTextArea(list);
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
         }
@@ -285,11 +336,34 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void showPlayList(ActionEvent e) {
-        System.out.println("Showing List");
+        listPane.setVisible(!listPane.isVisible());
+    }
+
+    public void highlightFile(String currFile) {
+        highlightFile = currFile;
+        playingList.refresh();
     }
 
     public void changeMode(ActionEvent e) {
-        System.out.println("Changed Mode!");
+        if(switchMode.getText().equalsIgnoreCase("list-loop")) {
+            mode = "Single-Loop";
+            switchMode.setVisible(true);
+            switchMode.setText(mode);
+            PauseTransition delay = new PauseTransition(Duration.seconds(4));
+            delay.setOnFinished(event -> {
+                switchMode.setVisible(false);
+            });
+            delay.play();
+        } else if(switchMode.getText().equalsIgnoreCase("Single-Loop")) {
+            mode = "list-loop";
+            switchMode.setVisible(true);
+            switchMode.setText(mode);
+            PauseTransition delay = new PauseTransition(Duration.seconds(4));
+            delay.setOnFinished(event -> {
+                switchMode.setVisible(false);
+            });
+            delay.play();
+        }
     }
 
     public void startTime() {
@@ -330,14 +404,14 @@ public class AudioPlayerController implements Initializable {
     }
 
     public void adjustVolume(String value) {
-        if(mediaPlayer.isMute()) {
+        if (mediaPlayer.isMute()) {
             mediaPlayer.setMute(false);
         }
         double currVol = mediaPlayer.getVolume();
         double updatedVol = 0.0;
-        if(value.equalsIgnoreCase("up")) {
+        if (value.equalsIgnoreCase("up")) {
             updatedVol = Math.min(currVol + 0.1, 1.0);
-        } else if(value.equalsIgnoreCase("down")) {
+        } else if (value.equalsIgnoreCase("down")) {
             updatedVol = Math.max(currVol - 0.1, 0.0);
         }
         mediaPlayer.setVolume(updatedVol);
