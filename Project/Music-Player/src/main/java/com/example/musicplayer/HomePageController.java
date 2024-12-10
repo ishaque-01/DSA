@@ -27,24 +27,6 @@ public class HomePageController implements Initializable {
     @FXML
     private Stage stage;
 
-    public void audio(ActionEvent e) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
-        Parent root = loader.load();
-        AudioFilesController afc = loader.getController();
-        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void video(ActionEvent e) {
-        System.out.println("video");
-    }
-
-    public void exit(ActionEvent e) {
-        System.exit(0);
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         RotateTransition rotate = new RotateTransition();
@@ -59,5 +41,29 @@ public class HomePageController implements Initializable {
         audioBtn.setFocusTraversable(false);
         videoBtn.setFocusTraversable(false);
         exitBtn.setFocusTraversable(false);
+    }
+
+    public void audio(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioFiles.fxml"));
+        Parent root = loader.load();
+        AudioFilesController afc = loader.getController();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void video(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/VideoFiles.fxml"));
+        Parent root = loader.load();
+        VideoFilesController vfc = loader.getController();
+        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void exit(ActionEvent e) {
+        System.exit(0);
     }
 }

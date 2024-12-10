@@ -8,18 +8,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-public class AudioFilesController implements Initializable {
+public class VideoFilesController implements Initializable {
 
     @FXML
     private Button backBtn, addBtn, playBtn, createBtn, addPlaylist;
@@ -32,13 +38,13 @@ public class AudioFilesController implements Initializable {
 
     private LinkedList<File> list = new LinkedList<>();
 
-    private String playlistPath = "AudioPlaylists/";
+    private String playlistPath = "VideoPlaylists/";
     private Stage stage;
     private Scene scene;
     private Parent root;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize (URL url, ResourceBundle resourceBundle) {
         modes.getItems().add("No Playlist Available!");
         modes.getSelectionModel().selectFirst();
         modes.setOnAction(event -> {
@@ -70,7 +76,6 @@ public class AudioFilesController implements Initializable {
         addPlaylist.setFocusTraversable(false);
     }
 
-
     public void updateMode() {
         File directory = new File(playlistPath);
         if (directory.isDirectory() && directory.exists() && directory.listFiles().length > 0) {
@@ -92,10 +97,10 @@ public class AudioFilesController implements Initializable {
         list.clear();
         filesList.setText("");
         if (!modes.getValue().equalsIgnoreCase("No Playlist Available!") && !modes.getValue().equalsIgnoreCase("Playlists Available")) {
-                addPlaylist.setDisable(false);
             String path = playlistPath + modes.getValue();
             File playlist = new File(path);
             if (playlist.exists()) {
+                addPlaylist.setDisable(false);
                 Scanner scan = new Scanner(playlist);
                 StringBuilder sb = new StringBuilder();
                 int count = 1;
@@ -207,21 +212,20 @@ public class AudioFilesController implements Initializable {
         delay.play();
     }
 
-    public void audioPlayer(ActionEvent e) throws IOException {
-
+    public void videoPlayer(ActionEvent e) throws IOException {
         if (!list.isEmpty()) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/AudioPlayer.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLFiles/VideoPlayer.fxml"));
             Parent root = loader.load();
 
-            AudioPlayerController audioPlayerController = loader.getController();
-            audioPlayerController.setPlayListAndMode(list, "List-Loop");
+            VideoPlayerController videoPlayerController = loader.getController();
+            videoPlayerController.setPlayListAndMode(list, "List-Loop");
 
             stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } else {
-            statusField.setText("No Audio Files Selected");
+            statusField.setText("No Video Files Selected");
             PauseTransition delay = new PauseTransition(Duration.seconds(2));
             delay.setOnFinished(event -> statusField.setText("Waiting For File....!!!"));
             delay.play();
@@ -229,7 +233,6 @@ public class AudioFilesController implements Initializable {
     }
 
     public void goBack(ActionEvent e) throws IOException {
-        System.out.println("Changing scene");
         root = FXMLLoader.load(getClass().getResource("FXMLFiles/Main.fxml"));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -239,9 +242,9 @@ public class AudioFilesController implements Initializable {
 
     public void addFiles(ActionEvent e) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Audio Files");
+        fileChooser.setTitle("Select Video Files");
 
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Audio Files", "*.mp3", "*.wav", "*.m4a"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Video Files", "*.mp4"));
 
         File selectedFile = fileChooser.showOpenDialog(((Node) e.getSource()).getScene().getWindow());
         if (selectedFile != null) {

@@ -24,7 +24,6 @@
             <Image url="@../../../../logo.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="fileImage" fitHeight="399.0" fitWidth="609.0" layoutX="-3.0" pickOnBounds="true" smooth="false" />
       <ImageView fitHeight="40.0" fitWidth="50.0" layoutX="285.0" layoutY="318.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../speed.png" />
