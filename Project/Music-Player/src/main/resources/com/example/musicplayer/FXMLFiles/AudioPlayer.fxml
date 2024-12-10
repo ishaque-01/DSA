@@ -19,7 +19,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="603.0" style="-fx-background-color: #A5A5A5;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.musicplayer.AudioPlayerController">
    <children>
-      <ImageView fx:id="logo" fitHeight="296.0" fitWidth="412.0" layoutX="153.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="logo" fitHeight="296.0" fitWidth="412.0" layoutX="153.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../logo.png" />
          </image>
@@ -91,7 +91,7 @@
             <InnerShadow />
          </effect></ProgressBar>
       <ComboBox fx:id="speedBox" layoutX="281.0" layoutY="316.0" onAction="#changeSpeed" opacity="0.0" prefHeight="46.0" prefWidth="20.0" style="-fx-border-radius: 40px; -fx-background-radius: 40px;" />
-      <Label fx:id="fileName" alignment="CENTER" layoutX="78.0" prefHeight="40.0" prefWidth="456.0" text="NAME" textOverrun="CLIP" wrapText="true">
+      <Label fx:id="fileName" alignment="CENTER" layoutX="98.0" prefHeight="40.0" prefWidth="456.0" text="NAME" textOverrun="CLIP" wrapText="true">
          <font>
             <Font name="Noto Sans Mono ExtraBold" size="13.0" />
          </font>
@@ -137,6 +137,7 @@
          </image>
       </ImageView>
       <Button fx:id="shuffle" layoutX="14.0" layoutY="325.0" mnemonicParsing="false" onAction="#changeMode" opacity="0.0" prefHeight="28.0" prefWidth="35.0" />
+      <ImageView fx:id="fileImage" fitHeight="224.0" fitWidth="391.0" layoutX="106.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="132.0" AnchorPane.leftAnchor="106.0" AnchorPane.rightAnchor="106.0" AnchorPane.topAnchor="43.0" />
       <Pane fx:id="listPane" layoutY="218.0" prefHeight="178.0" prefWidth="603.0">
          <children>
             <ListView fx:id="playingList" focusTraversable="false" layoutY="3.0" prefHeight="178.0" prefWidth="603.0" />

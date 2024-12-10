@@ -44,7 +44,7 @@ public class AudioPlayerController implements Initializable {
     double volumeValue;
 
     @FXML
-    private ImageView logo, playPause;
+    private ImageView logo, playPause, fileImage;
     @FXML
     private Button prevBtn, nextBtn, playBtn, backBtn, playingQueue, shuffle, exitQueue;
     @FXML
@@ -225,7 +225,6 @@ public class AudioPlayerController implements Initializable {
             int minutes = (int) (end / 60);
             int seconds = (int) (end % 60);
             endTime.setText(String.format("%02d:%02d", minutes, seconds));
-
 //            if(media.getMetadata().containsKey("image")) {
 //                Image icon = (Image) media.getMetadata().get("image");
 //                fileImage.setImage(icon);
