@@ -43,6 +43,8 @@ public class VideoFilesController implements Initializable {
     private Scene scene;
     private Parent root;
 
+    public VideoFilesController() {}
+
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         modes.getItems().add("No Playlist Available!");

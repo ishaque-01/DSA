@@ -229,7 +229,6 @@ public class AudioFilesController implements Initializable {
     }
 
     public void goBack(ActionEvent e) throws IOException {
-        System.out.println("Changing scene");
         root = FXMLLoader.load(getClass().getResource("FXMLFiles/Main.fxml"));
         stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         scene = new Scene(root);
