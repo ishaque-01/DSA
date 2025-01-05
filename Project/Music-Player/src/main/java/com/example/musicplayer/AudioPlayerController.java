@@ -135,7 +135,6 @@ public class AudioPlayerController implements Initializable {
             });
         });
 
-        playingList.setStyle("-fx-background-color: #2F2F2F; -fx-text-fill: #e5e5e5;");
         playingList.setCellFactory(listView -> new ListCell<String>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -143,13 +142,13 @@ public class AudioPlayerController implements Initializable {
 
                 if (empty || item == null) {
                     setText(null);
-                    setStyle("");
+                    setStyle("-fx-background-color: #161617; -fx-border-color: #e5e5e5; -fx-border-width: 0.5;");
                 } else {
                     setText(item);
                     if (item.equals(highlightFile)) {
-                        setStyle("-fx-background-color:  #2F2F2F; -fx-text-fill:  #e5e5e5;");
+                        setStyle("-fx-background-color: #2F2F2F; -fx-text-fill: #e5e5e5;");
                     } else {
-                        setStyle("-fx-background-color:  #161617; -fx-text-fill:  #e5e5e5;");
+                        setStyle("-fx-background-color: #161617; -fx-text-fill: #e5e5e5; -fx-border-color: #e5e5e5; -fx-border-width: 0.5;");
                     }
                 }
             }
@@ -225,13 +224,14 @@ public class AudioPlayerController implements Initializable {
             int minutes = (int) (end / 60);
             int seconds = (int) (end % 60);
             endTime.setText(String.format("%02d:%02d", minutes, seconds));
-//            if(media.getMetadata().containsKey("image")) {
-//                Image icon = (Image) media.getMetadata().get("image");
-//                fileImage.setImage(icon);
-//            } else {
-//                fileImage.setImage(null);
-//            }
 
+//            MetaData returns Map<String, Object> checking with String if it has image or not
+            if(media.getMetadata().containsKey("image")) {
+                Image icon = (Image) media.getMetadata().get("image");
+                fileImage.setImage(icon);
+            } else {
+                fileImage.setImage(null);
+            }
         });
 
         mediaPlayer.setOnEndOfMedia(() -> {
